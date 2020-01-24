@@ -44,14 +44,14 @@ def construct_counts_dict(
             )
             + '\n'
         )
-    counts = allelecounts.join_as_dict(temp_counts_name)
+    counts = join_as_dict(temp_counts_name)
     os.remove(temp_counts_name)
     return counts
 
 
 def print_tabular(pileup_file_path, mode='cr', header=True):
     with open(pileup_file_path, 'r') as f:
-        for row in pileup.generate_counts(
+        for row in generate_counts(
             f,
             mode=mode,
             header=header
