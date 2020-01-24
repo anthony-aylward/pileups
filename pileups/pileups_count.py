@@ -59,22 +59,6 @@ def print_tabular(pileup_file_path, mode='cr', header=True):
             print('\t'.join(str(item) for item in row))
 
 
-def main(args):
-    if args.json:
-        print(
-            json.dumps(
-                construct_counts_dict(
-                    args.pileup,
-                    mode=args.mode,
-                    header=not args.no_header,
-                    temp_dir=args.tmp_dir
-                )
-            )
-        )
-    else:
-        print_tabular(args.pileup, mode=args.mode, header=not args.no_header)
-
-
 def parse_arguments():
     parser = argparse.ArgumentParser(
         description="convert a pileup to allele counts"
@@ -111,9 +95,18 @@ def parse_arguments():
     return parser.parse_args()
 
 
-
-
-# Execute ======================================================================
-
-args = parse_arguments()
-main(args)
+def main():
+    args = parse_arguments()
+    if args.json:
+        print(
+            json.dumps(
+                construct_counts_dict(
+                    args.pileup,
+                    mode=args.mode,
+                    header=not args.no_header,
+                    temp_dir=args.tmp_dir
+                )
+            )
+        )
+    else:
+        print_tabular(args.pileup, mode=args.mode, header=not args.no_header)
