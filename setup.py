@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='pileups',
-    version='0.0.1',
+    version='0.1.0',
     author='Anthony Aylward',
     author_email='aaylward@eng.ucsd.edu',
     description='Manipulate files of the pileup format from SAMtools',
@@ -18,5 +18,11 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent"
     ],
-    install_requires=['funcgenom']
+    install_requires=['funcgenom'],
+    entry_points={
+        'console_scripts': [
+            'pileups-merge=pileups.pileups_merge:main',
+            'pileups-count=pileups.pileups_count:main'
+        ]
+    }
 )

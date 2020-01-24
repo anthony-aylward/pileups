@@ -48,7 +48,8 @@ def parse_arguments():
     return args
 
 
-def main(args):
+def main():
+    args = parse_arguments()
     for row in merge(
         *args.pileup,
         alleles=args.alleles,
