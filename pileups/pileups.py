@@ -126,9 +126,11 @@ def merge(
     for variant in genome.variants():
         indices = tuple(
             i for i in variant.traits.keys()
-            if (not het_filter) or count_ref_alleles(variant, i) not in {
-                0, variant.traits[i]['coverage']
-            }
+            if (not het_filter) or (
+                count_ref_alleles(variant, i) not in {
+                    0, variant.traits[i]['coverage']
+                }
+            )
         )
         yield (
             ('chr{}'.format(variant.chromosome), str(variant.position))
