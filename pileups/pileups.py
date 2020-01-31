@@ -132,6 +132,7 @@ def merge(
                 }
             )
         )
+        print(indices)
         if len(indices) > 0:
             yield (
                 ('chr{}'.format(variant.chromosome), str(variant.position))
