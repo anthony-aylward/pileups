@@ -132,13 +132,14 @@ def merge(
                 }
             )
         )
-        yield (
-            ('chr{}'.format(variant.chromosome), str(variant.position))
-            + reference * (variant.traits[indices[0]]['ref'].casefold(),)
-            + (str(int(sum(variant.traits[i]['coverage'] for i in indices))),)
-            + alleles * (
-                ''.join(variant.traits[i]['alleles'] for i in indices),
-                ''.join(str(variant.traits[i]['qual']) for i in indices)
+        if len(indices) > 0:
+            yield (
+                ('chr{}'.format(variant.chromosome), str(variant.position))
+                + reference * (variant.traits[indices[0]]['ref'].casefold(),)
+                + (str(int(sum(variant.traits[i]['coverage'] for i in indices))),)
+                + alleles * (
+                    ''.join(variant.traits[i]['alleles'] for i in indices),
+                    ''.join(str(variant.traits[i]['qual']) for i in indices)
+                )
+                + count * (str(count_ref_alleles(variant, *indices)),)
             )
-            + count * (str(count_ref_alleles(variant, *indices)),)
-        )
