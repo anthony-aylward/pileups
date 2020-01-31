@@ -40,6 +40,11 @@ def parse_arguments():
         help='Print reference alleles'
     )
     parser.add_argument('--header', help='Add a header to the output')
+    parser.add_argument(
+        '--het-filter',
+        action='store_true',
+        help='apply het filter'
+    )
     args = parser.parse_args()
     if not args.count:
         args.alleles = True
@@ -55,6 +60,7 @@ def main():
         alleles=args.alleles,
         count=args.count,
         reference=args.reference,
-        header=(args.header.split() if args.header else None)
+        header=(args.header.split() if args.header else None),
+        het_filter=args.het_filter
     ):
         print('\t'.join(row), end='\n')

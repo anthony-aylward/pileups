@@ -78,7 +78,14 @@ def count_ref_alleles(variant, *traits):
     )
 
 
-def merge(*file_paths, alleles=True, count=False, reference=True, header=None):
+def merge(
+    *file_paths,
+    alleles=True,
+    count=False,
+    reference=True,
+    header=None,
+    het_filter=False
+):
 
     """Merge a group of pileup files on disk into a single pileup
     
@@ -107,8 +114,9 @@ def merge(*file_paths, alleles=True, count=False, reference=True, header=None):
             file_path,
             add_header=('chr', 'pos', 'ref', 'coverage', 'alleles', 'qual'),
             traits={
-                file_paths.index(file_path):
-                    {'ref': 2, 'coverage': 3, 'alleles': 4, 'qual': 5}
+                file_paths.index(file_path): {
+                    'ref': 2, 'coverage': 3, 'alleles': 4, 'qual': 5
+                }
             }
         )
         genome.sort_variants()
@@ -116,7 +124,12 @@ def merge(*file_paths, alleles=True, count=False, reference=True, header=None):
     if header:
         yield header
     for variant in genome.variants():
-        indices = tuple(variant.traits.keys())
+        indices = tuple(
+            i for i in variant.traits.keys()
+            if (not het_filter) or count_ref_alleles(variant, i) not in {
+                0, variant.traits[i]['coverage']
+            }
+        )
         yield (
             ('chr{}'.format(variant.chromosome), str(variant.position))
             + reference * (variant.traits[indices[0]]['ref'].casefold(),)
