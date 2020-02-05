@@ -130,8 +130,8 @@ def merge(
             i for i in variant.traits.keys()
             if (not het_filter) or (
                 count_ref_alleles(variant, i) not in {
-                    val for i in range(het_filter)
-                    for val in (i, variant.traits[i]['coverage'] - i)
+                    val for j in range(het_filter)
+                    for val in (j, variant.traits[i]['coverage'] - j)
                 }
             )
         )
