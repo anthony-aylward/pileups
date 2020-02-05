@@ -84,7 +84,7 @@ def merge(
     count=False,
     reference=True,
     header=None,
-    het_filter=False
+    het_filter=0
 ):
 
     """Merge a group of pileup files on disk into a single pileup
@@ -101,6 +101,8 @@ def merge(
         include reference allele in output if True
     header : iterable
         provide a header for the output
+    het_filter : int
+        threshold for heterozygous site filter
     
     Yields
     -------
@@ -128,7 +130,8 @@ def merge(
             i for i in variant.traits.keys()
             if (not het_filter) or (
                 count_ref_alleles(variant, i) not in {
-                    0, variant.traits[i]['coverage']
+                    val for i in range(het_filter)
+                    for val in (i, variant.traits[i]['coverage'] - i)
                 }
             )
         )

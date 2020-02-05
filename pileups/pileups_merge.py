@@ -42,7 +42,8 @@ def parse_arguments():
     parser.add_argument('--header', help='Add a header to the output')
     parser.add_argument(
         '--het-filter',
-        action='store_true',
+        metavar='<int>',
+        type=int,
         help='apply het filter'
     )
     args = parser.parse_args()
