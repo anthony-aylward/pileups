@@ -84,7 +84,7 @@ def merge(
     count=False,
     reference=True,
     header=None,
-    het_filter=False
+    het_filter=0
 ):
 
     """Merge a group of pileup files on disk into a single pileup
@@ -101,6 +101,8 @@ def merge(
         include reference allele in output if True
     header : iterable
         provide a header for the output
+    het_filter : int
+        threshold for heterozygous site filter
     
     Yields
     -------
@@ -126,17 +128,21 @@ def merge(
     for variant in genome.variants():
         indices = tuple(
             i for i in variant.traits.keys()
-            if (not het_filter) or count_ref_alleles(variant, i) not in {
-                0, variant.traits[i]['coverage']
-            }
-        )
-        yield (
-            ('chr{}'.format(variant.chromosome), str(variant.position))
-            + reference * (variant.traits[indices[0]]['ref'].casefold(),)
-            + (str(int(sum(variant.traits[i]['coverage'] for i in indices))),)
-            + alleles * (
-                ''.join(variant.traits[i]['alleles'] for i in indices),
-                ''.join(str(variant.traits[i]['qual']) for i in indices)
+            if (not het_filter) or (
+                count_ref_alleles(variant, i) not in {
+                    val for j in range(het_filter)
+                    for val in (j, variant.traits[i]['coverage'] - j)
+                }
             )
-            + count * (str(count_ref_alleles(variant, *indices)),)
         )
+        if len(indices) > 0:
+            yield (
+                ('chr{}'.format(variant.chromosome), str(variant.position))
+                + reference * (variant.traits[indices[0]]['ref'].casefold(),)
+                + (str(int(sum(variant.traits[i]['coverage'] for i in indices))),)
+                + alleles * (
+                    ''.join(variant.traits[i]['alleles'] for i in indices),
+                    ''.join(str(variant.traits[i]['qual']) for i in indices)
+                )
+                + count * (str(count_ref_alleles(variant, *indices)),)
+            )
