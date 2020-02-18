@@ -11,9 +11,9 @@
 # Imports ======================================================================
 
 import argparse
+import seaborn as sns
 
 from pileups.pileups import generate_counts
-
 
 
 
@@ -27,7 +27,7 @@ def ref_frac_dist(pileup_file_path):
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
-        description="convert a pileup to allele counts"
+        description="plot the distribution of a pileup"
     )
     parser.add_argument(
         'pileup',
@@ -35,9 +35,9 @@ def parse_arguments():
         help='path to pileup'
     )
     parser.add_argument(
-        '--tmp-dir',
-        metavar='<temp/file/dir/>',
-        help='directory for temporary files'
+        'output',
+        metavar='<path/to/output.{pdf,png,svg}>',
+        help='path to output file'
     )
     return parser.parse_args()
 
@@ -45,4 +45,6 @@ def parse_arguments():
 def main():
     args = parse_arguments()
     dist = ref_frac_dist(args.pileup)
-    
+    ax = sns.distplot(dist)
+    fig = ax.get_figure()
+    fig.savefig(args.output)
