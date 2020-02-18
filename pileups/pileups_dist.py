@@ -22,7 +22,7 @@ from pileups.pileups import generate_counts
 
 def ref_frac_dist(pileup_file_path):
     with open(pileup_file_path, 'r') as f:
-        return tuple(r / c for _, _, c, r in generate_counts(f))
+        return tuple(r / c for _, _, c, r in generate_counts(f) if c > 0)
 
 
 def parse_arguments():
