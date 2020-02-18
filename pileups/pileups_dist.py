@@ -13,6 +13,7 @@
 import argparse
 import seaborn as sns
 
+from statistics import median
 from pileups.pileups import generate_counts
 
 
@@ -57,5 +58,6 @@ def main():
     args = parse_arguments()
     dist = ref_frac_dist(args.pileup, heterozygosity=args.heterozygosity)
     ax = sns.distplot(dist)
+    ax.axvline(x=median(dist))
     fig = ax.get_figure()
     fig.savefig(args.output)
