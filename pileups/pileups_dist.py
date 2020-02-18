@@ -20,9 +20,13 @@ from pileups.pileups import generate_counts
 
 # Functions ====================================================================
 
-def ref_frac_dist(pileup_file_path):
+def ref_frac_dist(pileup_file_path: str, heterozygosity: int = 1):
     with open(pileup_file_path, 'r') as f:
-        return tuple(r / c for _, _, c, r in generate_counts(f) if c > 0)
+        return tuple(
+            r / c for _, _, c, r in generate_counts(f) if all(
+                (c > 0, r >= heterozygosity, c - r >= heterozygosity)
+            )
+        )
 
 
 def parse_arguments():
@@ -39,12 +43,18 @@ def parse_arguments():
         metavar='<path/to/output.{pdf,png,svg}>',
         help='path to output file'
     )
+    parser.add_argument(
+        '--heterozygosity',
+        metavar='<int>',
+        type=int,
+        help='heterozygosity threshold'
+    )
     return parser.parse_args()
 
 
 def main():
     args = parse_arguments()
-    dist = ref_frac_dist(args.pileup)
+    dist = ref_frac_dist(args.pileup, heterozygosity=args.heterozygosity)
     ax = sns.distplot(dist)
     fig = ax.get_figure()
     fig.savefig(args.output)
