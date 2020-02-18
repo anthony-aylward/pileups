@@ -47,6 +47,7 @@ def parse_arguments():
         '--heterozygosity',
         metavar='<int>',
         type=int,
+        default=1,
         help='heterozygosity threshold'
     )
     return parser.parse_args()
