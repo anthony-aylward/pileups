@@ -23,7 +23,7 @@ def parse_arguments():
     parser.add_argument(
         'file_paths',
         metavar='<path/to/file.pileup>',
-        nargs='+'
+        nargs='+',
         help='paths to pileup files'
     )
     args = parser.parse_args()

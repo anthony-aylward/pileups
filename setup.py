@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='pileups',
-    version='0.3.2',
+    version='0.3.3',
     author='Anthony Aylward',
     author_email='aaylward@eng.ucsd.edu',
     description='Manipulate files of the pileup format from SAMtools',
