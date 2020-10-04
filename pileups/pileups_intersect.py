@@ -23,9 +23,13 @@ def parse_arguments():
     parser.add_argument(
         'file_paths',
         metavar='<path/to/file.pileup>',
+        nargs='+'
         help='paths to pileup files'
     )
-    return parser.parse_args()
+    args = parser.parse_args()
+    if len(args.file_paths) < 2:
+        raise RuntimeError('please provide at least two arguments')
+    return args
 
 
 def main():
