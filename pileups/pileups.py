@@ -146,3 +146,37 @@ def merge(
                 )
                 + count * (str(count_ref_alleles(variant, *indices)),)
             )
+
+
+def generate_coords(file_path):
+    with open(file_path, 'r') as f:
+        for line in f:
+            chrom, pos, *rest = line.split()
+            yield chrom, int(pos)
+
+
+def intersect(*file_paths):
+    """Intersect a pileup with other pileups
+    
+    Parameters
+    ----------
+    *file_paths : str
+        paths to pileup files
+    
+    Yields
+    -------
+    tuple
+        a row of the intersected pileup file
+    """
+
+    coord_set = set(generate_coords(file_paths[1])).intersection(
+        *(set(generate_coords(f)) for f in file_paths[2:])
+    )
+    with open(file_paths[0], 'r') as f:
+        for line in f:
+            chrom, pos, *rest = line.split()
+            position = int(pos)
+            if (chrom, position) in coord_set:
+                yield (chrom, position) + tuple(rest)
+
+    

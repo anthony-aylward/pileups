@@ -11,9 +11,6 @@
 # Imports ======================================================================
 
 import argparse
-import socket
-import sys
-
 from pileups.pileups import merge
 
 
